@@ -1,0 +1,11 @@
+{
+    "accuracy": 0.8824,
+    "macro_precision": 0.8842,
+    "macro_recall": 0.8822,
+    "macro_f1": 0.883,
+    "num_samples": 2441,
+    "model_name": "roberta-base",
+    "batch_size": 8,
+    "max_len": 512,
+    "num_classes": 5
+}
