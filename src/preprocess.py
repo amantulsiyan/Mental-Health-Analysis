@@ -11,6 +11,35 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config import SEED
 
 STOP_WORDS = set(stopwords.words('english'))
+CUSTOM_STOPWORDS = {
+    "like",
+    "get",
+    "got",
+    "know",
+    "thing",
+    "things",
+    "one",
+    "really",
+    "ive",
+    "im",
+    "dont",
+    "didnt",
+    "cant",
+    "couldnt",
+    "would",
+    "also",
+    "even",
+    "make",
+    "made",
+    "going",
+    "day",
+    "time",
+    "people",
+    "friend",
+    "year"
+}
+
+STOP_WORDS = STOP_WORDS.union(CUSTOM_STOPWORDS)
 LEMMATIZER = WordNetLemmatizer()
 
 
@@ -51,6 +80,7 @@ def preprocess_dataframe(df, branch='roberta'):
     df = df[df['text'].str.split().str.len() >= 5]
     df = df.reset_index(drop=True)
     return df
+
 
 
 if __name__ == "__main__":
