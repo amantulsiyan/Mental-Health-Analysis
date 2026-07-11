@@ -1,162 +1,435 @@
-# Mental Health Monitoring Through Social Media Analytics
+# 🧠 Mental Health Monitoring Through Social Media Analytics
 
-An end-to-end mental health text analysis system using fine-tuned RoBERTa,
-VADER sentiment analysis, LIME explainability, and a Streamlit dashboard.
+An end-to-end Natural Language Processing (NLP) system for detecting mental health conditions from social media posts using **RoBERTa**, **VADER Sentiment Analysis**, **LIME Explainability**, and an interactive **Streamlit Dashboard**.
 
-## System Overview
+---
 
-- **Classification**: Fine-tuned `roberta-base` for 5-class mental health prediction (depression, anxiety, bipolar, PTSD, normal)
-- **Sentiment**: VADER parallel sentiment scoring
-- **Explainability**: LIME token-level prediction explanations
-- **Dashboard**: Streamlit interactive visualization
+# 🚀 Features
 
-## Dataset
+- 🔍 Fine-tuned **RoBERTa** for 5-class mental health classification
+- 😊 Parallel **VADER** sentiment analysis
+- 📊 Exploratory Data Analysis (EDA)
+- ☁️ Per-class **Word Clouds**
+- 📈 Top-20 Frequent Word Analysis
+- 🔤 Text Preprocessing Pipeline
+- 📚 TF-IDF & Bag-of-Words Feature Engineering
+- 🧠 LIME Explainability
+- 📉 Confusion Matrix & ROC Curves
+- 🌐 Interactive Streamlit Dashboard
 
-- **Source**: Reddit Mental Health Corpus (5 subreddits: depression, anxiety, bipolar, PTSD, normal/jokes/fitness/relationships)
-- **Size**: Up to 5,000 samples per class, balanced — ~25,000 total before split
-- **Split**: 80% train / 10% validation / 10% test (stratified)
-- **Test set**: 2,441 samples
+---
 
-## Project Structure
+# 📂 Dataset
+
+### Source
+
+Reddit Mental Health Corpus
+
+The dataset contains posts collected from mental-health-related subreddits.
+
+### Classes
+
+- Depression
+- Anxiety
+- Bipolar
+- PTSD
+- Normal
+
+### Dataset Statistics
+
+| Split | Samples |
+|--------|---------|
+| Train | 19,529 |
+| Validation | 2,441 |
+| Test | 2,442 |
+| **Total** | **24,412** |
+
+The dataset is approximately balanced across all five classes.
+
+---
+
+# 🧹 Text Preprocessing
+
+Two preprocessing pipelines are implemented.
+
+## 1. RoBERTa Pipeline
+
+Designed for transformer models.
+
+Operations:
+
+- URL removal
+- HTML tag removal
+- HTML entity removal
+- Unicode normalization
+- Whitespace normalization
+
+This pipeline preserves sentence structure for transformer-based learning.
+
+---
+
+## 2. VADER / Traditional ML Pipeline
+
+Designed for statistical analysis and feature engineering.
+
+Operations:
+
+- Lowercasing
+- URL removal
+- HTML removal
+- Punctuation removal
+- Stopword removal
+- Custom stopword filtering
+- Lemmatization
+
+Used for:
+
+- Frequent word analysis
+- TF-IDF
+- Bag-of-Words
+
+---
+
+# 📊 Exploratory Data Analysis
+
+The project includes several exploratory visualizations:
+
+- Class distribution
+- Text length distribution
+- Word Clouds
+- Top-20 Frequent Words
+- Confusion Matrix
+- ROC Curves
+- Error Analysis
+
+---
+
+# ☁️ Word Cloud Generation
+
+Word clouds are automatically generated for every class.
+
+Generated files:
 
 ```
-├── data/               # train.csv, val.csv, test.csv (gitignored)
-├── models/
-│   └── best_model/     # Saved RoBERTa checkpoint (gitignored, shared via HuggingFace Hub)
+assets/wordclouds/
+
+anxiety.png
+bipolar.png
+depression.png
+normal.png
+ptsd.png
+```
+
+---
+
+# 📈 Frequent Word Analysis
+
+The project generates Top-20 frequent word charts for every class after VADER preprocessing.
+
+Generated files:
+
+```
+assets/frequent_words/
+
+anxiety_top20.png
+bipolar_top20.png
+depression_top20.png
+normal_top20.png
+ptsd_top20.png
+```
+
+---
+
+# 📚 Feature Engineering
+
+Traditional Machine Learning features are generated using:
+
+- CountVectorizer (Bag-of-Words)
+- TF-IDF Vectorizer
+
+Generated artifacts:
+
+```
+data/features/
+
+bow_vectorizer.pkl
+tfidf_vectorizer.pkl
+bow_features.pkl
+tfidf_features.pkl
+```
+
+These can be reused without recomputing features.
+
+---
+
+# 🏗️ Project Structure
+
+```text
+Mental-Health-Analysis/
+│
 ├── assets/
-│   ├── charts/         # Training curves, confusion matrix, ROC curves, EDA plots
-│   ├── lime_html/      # Per-prediction LIME HTML explanations
-│   ├── lime_examples/  # Per-prediction LIME bar chart PNGs
-│   ├── wordclouds/     # Per-class word clouds
+│   ├── charts/
+│   ├── frequent_words/
+│   ├── lime_examples/
+│   ├── lime_html/
+│   ├── wordclouds/
 │   └── error_analysis.csv
+│
+├── data/
+│   ├── train.csv
+│   ├── val.csv
+│   ├── test.csv
+│   ├── processed/
+│   │   ├── train_clean.csv
+│   │   ├── val_clean.csv
+│   │   └── test_clean.csv
+│   └── features/
+│       ├── bow_features.pkl
+│       ├── bow_vectorizer.pkl
+│       ├── tfidf_features.pkl
+│       └── tfidf_vectorizer.pkl
+│
 ├── logs/
-│   ├── eval_results.json
-│   ├── classification_report.txt
-│   ├── baseline_results.json
-│   ├── runs.json
-│   └── all_preds/labels/probs/confidences.npy
+│
 ├── src/
-│   ├── config.py           # All constants, paths, hyperparameters
-│   ├── preprocess.py       # Text cleaning (RoBERTa + VADER branches)
-│   ├── data_loader.py      # Data loading, balancing, EDA, splitting
-│   ├── train.py            # RoBERTa fine-tuning loop
-│   ├── baseline.py         # TF-IDF + Logistic Regression baseline
-│   ├── evaluate.py         # Model evaluation, metrics, error analysis
-│   ├── lime_explainer.py   # LIME explainability
-│   ├── vader_module.py     # VADER sentiment scoring
-│   ├── wordcloud_gen.py    # Word cloud generation
-│   └── app.py              # Streamlit dashboard
+│   ├── app.py
+│   ├── baseline.py
+│   ├── build_clean_dataset.py
+│   ├── config.py
+│   ├── data_loader.py
+│   ├── evaluate.py
+│   ├── feature_extraction.py
+│   ├── frequent_words.py
+│   ├── lime_explainer.py
+│   ├── preprocess.py
+│   ├── train.py
+│   ├── vader_module.py
+│   └── wordcloud_gen.py
+│
+├── README.md
 └── requirements.txt
 ```
 
-## Setup
+---
+
+# ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+Move into the project directory
+
+```bash
+cd Mental-Health-Analysis
+```
+
+Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux/macOS
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running the Pipeline
+---
+
+# ▶️ Running the Project
+
+## Step 1 — Build Clean Dataset
 
 ```bash
-# 1. Load and prepare data
-python src/data_loader.py
+python src/build_clean_dataset.py
+```
 
-# 2. Train RoBERTa
+---
+
+## Step 2 — Generate Word Clouds
+
+```bash
+python src/wordcloud_gen.py
+```
+
+---
+
+## Step 3 — Generate Frequent Word Charts
+
+```bash
+python src/frequent_words.py
+```
+
+---
+
+## Step 4 — Generate TF-IDF & Bag-of-Words Features
+
+```bash
+python src/feature_extraction.py
+```
+
+---
+
+## Step 5 — Train RoBERTa
+
+```bash
 python src/train.py
+```
 
-# 3. Evaluate on test set
+---
+
+## Step 6 — Evaluate the Model
+
+```bash
 python src/evaluate.py
+```
 
-# 4. Run LIME explainability on case studies
+Outputs:
+
+- Classification Report
+- Confusion Matrix
+- ROC Curves
+- Error Analysis
+
+---
+
+## Step 7 — Generate LIME Explanations
+
+```bash
 python src/lime_explainer.py
+```
 
-# 5. Launch Streamlit dashboard
+---
+
+## Step 8 — Launch Streamlit Dashboard
+
+```bash
 streamlit run src/app.py
 ```
 
-## Results
+---
 
-### RoBERTa (Fine-tuned `roberta-base`)
+# 📈 Results
 
-| Class      | Precision | Recall | F1-Score | Support |
-|------------|-----------|--------|----------|---------|
-| Depression | 0.7985    | 0.8400 | 0.8187   | 500     |
-| Anxiety    | 0.8489    | 0.8540 | 0.8514   | 500     |
-| Bipolar    | 0.8995    | 0.8710 | 0.8851   | 442     |
-| PTSD       | 0.9204    | 0.9020 | 0.9111   | 500     |
-| Normal     | 0.9534    | 0.9439 | 0.9486   | 499     |
-| **Macro Avg** | **0.8842** | **0.8822** | **0.8830** | 2441 |
+## RoBERTa Performance
 
-- **Test Accuracy**: 88.24%
-- **Macro F1**: 0.8830
-- **Macro Precision**: 0.8842
-- **Macro Recall**: 0.8822
+| Class | Precision | Recall | F1 |
+|--------|-----------|--------|------|
+| Depression | 0.7985 | 0.8400 | 0.8187 |
+| Anxiety | 0.8489 | 0.8540 | 0.8514 |
+| Bipolar | 0.8995 | 0.8710 | 0.8851 |
+| PTSD | 0.9204 | 0.9020 | 0.9111 |
+| Normal | 0.9534 | 0.9439 | 0.9486 |
 
-### Baseline (TF-IDF + Logistic Regression)
+### Overall Performance
 
-| Split      | Accuracy | Macro F1 | Macro Precision | Macro Recall |
-|------------|----------|----------|-----------------|--------------|
-| Validation | 0.8320   | 0.8309   | 0.8345          | 0.8306       |
-| Test       | 0.8411   | 0.8412   | 0.8464          | 0.8399       |
+| Metric | Score |
+|---------|--------|
+| Accuracy | **88.24%** |
+| Macro Precision | **0.8842** |
+| Macro Recall | **0.8822** |
+| Macro F1 | **0.8830** |
 
-### RoBERTa vs Baseline
+---
 
-| Metric      | Baseline | RoBERTa | Improvement |
-|-------------|----------|---------|-------------|
-| Macro F1    | 0.8412   | 0.8830  | **+0.0418** |
-| Accuracy    | 0.8411   | 0.8824  | **+0.0413** |
+## Baseline Model
 
-## Evaluation Pipeline (`evaluate.py`)
+TF-IDF + Logistic Regression
 
-- Loads the saved `best_model` checkpoint
-- Supports `RUN_INFERENCE = True/False` toggle — re-run inference or load cached `.npy` outputs
-- Generates:
-  - Classification report (per-class precision, recall, F1)
-  - Confusion matrix heatmap → `assets/charts/roberta_confusion_matrix.png`
-  - Multiclass ROC curves with per-class AUC → `assets/charts/roc_curves.png`
-  - Error analysis CSV (misclassified samples with confidence scores) → `assets/error_analysis.csv`
-  - Metrics JSON → `logs/eval_results.json`
+| Split | Accuracy | Macro F1 |
+|---------|---------|----------|
+| Validation | 83.20% | 0.8309 |
+| Test | 84.11% | 0.8412 |
 
-## LIME Explainability (`lime_explainer.py`)
+---
 
-- Uses `LimeTextExplainer` with bag-of-words mode
-- `predict_proba()` wraps the RoBERTa model for LIME compatibility
-- `explain_text(text, true_label)` returns:
-  - Predicted class and confidence
-  - Top 10 most influential tokens with importance scores
-  - Per-class probability distribution
-  - Inference time
-  - Correct/incorrect prediction flag (when true label is provided)
-- Outputs saved per prediction:
-  - HTML explanation → `assets/lime_html/<class>_<timestamp>.html`
-  - Bar chart PNG → `assets/lime_examples/<class>_<timestamp>.png`
-- Ships with 10 hand-crafted case studies (2 per class) for demo/testing
+## Performance Improvement
 
-## Training Configuration
+| Metric | Baseline | RoBERTa |
+|---------|----------|----------|
+| Accuracy | 84.11% | **88.24%** |
+| Macro F1 | 0.8412 | **0.8830** |
 
-| Hyperparameter       | Value                  |
-|----------------------|------------------------|
-| Base model           | `roberta-base`         |
-| Max sequence length  | 512                    |
-| Batch size           | 8 (effective: 32 w/ grad accum) |
-| Gradient accumulation| 4 steps                |
-| Learning rate        | 2e-5                   |
-| Weight decay         | 0.01                   |
-| Warmup ratio         | 0.1                    |
-| Max epochs           | 5                      |
-| Early stopping       | Patience = 2           |
-| Optimizer            | AdamW                  |
-| Mixed precision      | AMP (CUDA)             |
-| Seed                 | 42                     |
+---
 
-## Team
+# 🔍 Explainability
 
-| Member          | Contributions                                              |
-|-----------------|------------------------------------------------------------|
-| Adithya KL      | Data pipeline, EDA, RoBERTa training, baseline model       |
-| Aman Tulsiyan   | Evaluation, LIME explainability, error analysis |
-| Apoorv Anand    | VADER sentiment, word clouds, Streamlit dashboard          |
+The project uses **LIME** to explain model predictions.
 
-## Model Checkpoint
+For every explanation it generates:
 
-Available on HuggingFace Hub: [Adithya-257/mental-health-roberta](https://huggingface.co/Adithya-257/mental-health-roberta)
+- Prediction
+- Confidence
+- Top influential words
+- Probability distribution
+- HTML explanation
+- PNG visualization
+
+Outputs:
+
+```
+assets/lime_html/
+assets/lime_examples/
+```
+
+---
+
+# ⚙️ Training Configuration
+
+| Parameter | Value |
+|------------|--------|
+| Base Model | roberta-base |
+| Max Length | 512 |
+| Batch Size | 8 |
+| Effective Batch Size | 32 |
+| Learning Rate | 2e-5 |
+| Weight Decay | 0.01 |
+| Epochs | 5 |
+| Warmup Ratio | 0.1 |
+| Optimizer | AdamW |
+| Early Stopping | Patience = 2 |
+| Random Seed | 42 |
+
+---
+
+# 👥 Team
+
+| Member | Contribution |
+|----------|--------------|
+| **Adithya KL** | Dataset preparation, EDA, RoBERTa training, baseline model |
+| **Aman Tulsiyan** | Evaluation pipeline, LIME explainability, error analysis |
+| **Apoorv Anand** | Text preprocessing, VADER sentiment analysis, word cloud generation, frequent word analysis, TF-IDF & Bag-of-Words feature engineering, Streamlit dashboard |
+
+---
+
+# 🤗 Model Checkpoint
+
+The trained model is available on Hugging Face.
+
+**Repository**
+
+https://huggingface.co/Adithya-257/mental-health-roberta
+
+---
+
+# 📜 License
+
+This project was developed for academic purposes as part of a Machine Learning course project.
