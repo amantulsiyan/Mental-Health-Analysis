@@ -18,6 +18,57 @@ An end-to-end Natural Language Processing (NLP) system for detecting mental heal
 - 🌐 Interactive Streamlit Dashboard
 
 ---
+# 📷 Application Screenshots
+
+## 🏠 Dashboard
+
+The main dashboard allows users to enter a Reddit post and performs:
+- RoBERTa mental health classification
+- VADER sentiment analysis
+- Class probability visualization
+- LIME explainability
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## 📊 Corpus Overview
+
+Displays dataset exploration including word clouds, sentiment analysis, and class distribution.
+
+![Corpus Overview](screenshots/corpus_overview.png)
+
+---
+
+## 📈 Dataset Class Distribution
+
+Shows the number of samples available for each mental health category.
+
+![Class Distribution](screenshots/class_distribution.png)
+
+---
+
+## 😊 Average VADER Sentiment by Class
+
+Visualizes the average compound sentiment score across all mental health categories.
+
+![Sentiment Chart](screenshots/sentiment_chart.png)
+
+---
+
+## 📉 Training Curves
+
+Shows the training and validation loss along with the Macro F1 score during model training.
+
+![Training Curves](screenshots/training_curves.png)
+
+---
+
+## 📈 ROC Curves
+
+Displays the ROC curves for all five classes, demonstrating the classifier's performance.
+
+![ROC Curves](screenshots/roc_curves.png)
 
 # 📂 Dataset
 
