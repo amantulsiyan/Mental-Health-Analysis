@@ -26,6 +26,13 @@ Thumbs.db
 
 #venv
 /venv/
+.venv/
+__pycache__/
+*.pyc
 
 #Cached Files
 *.npy
+
+# LIME outputs
+assets/lime_examples/
+assets/lime_html/
