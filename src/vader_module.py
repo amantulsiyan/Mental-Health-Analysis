@@ -108,21 +108,29 @@ def generate_corpus_statistics():
     for bar in bars:
         height = bar.get_height()
         if height >= 0:
-            y = height + 0.02
-            va = "bottom"
+            plt.text(
+                bar.get_x() + bar.get_width() / 2,
+                height + 0.01,
+                f"{height:.2f}",
+                ha="center",
+                va="bottom",
+                fontsize=10,
+                fontweight="bold"
+            )
         else:
-            y = height - 0.03
-            va = "top"
-
-        plt.text(
-            bar.get_x() + bar.get_width() / 2,
-            y,
-            f"{height:.2f}",
-            ha="center",
-            va=va,
-            fontsize=10
-        )
-
+            # Place negative values INSIDE the bar
+            plt.text(
+                bar.get_x() + bar.get_width() / 2,
+                height + 0.08,
+                f"{height:.2f}",
+                ha="center",
+                va="top",
+                fontsize=10,
+                fontweight="bold",
+                color="white"
+            )
+            
+    plt.ylim(-0.45, 0.25)
     plt.tight_layout()
 
     chart_path = os.path.join(CHARTS_DIR, "sentiment_by_class.png")
